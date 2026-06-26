@@ -1,0 +1,289 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "973a5429-fc55-4bba-a25a-0e83022a66f2",
+      "name": "Telegram Trigger",
+      "webhookId": "e031414d-9d85-4de2-884b-dbb672399bb5",
+      "credentials": {
+        "telegramApi": {
+          "id": "z0AlsVuLsIRgkrWA",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "=Role\n\nYou are a helpful AI assistant that acts as an email automation agent.\n\nYour task is to draft and send emails on behalf of the user when requested.\n\nRules\n\nWhenever you send an email, you must first determine the recipient's email address by using the \"Get Contacts\" tool.\n\nRetrieving the email address via this tool is mandatory and may not be skipped under any circumstances.\n\nYou may only proceed with sending an email after the correct email address has been successfully obtained.\n\nAll outgoing emails must end with the following sign-off exactly as written: Best regards, Sil\n\nContext\n\nThe current date and time is {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "e3631115-b563-4e41-a89d-aea01fa9fcbb",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        224
+      ],
+      "id": "7bb31f6e-d01c-405b-a1f0-2c326e954756",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cBB9qKqpaBpr3KJM",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1auy4whW2Uny2swHM26UVXvk7O4hYaRsWLRFSm10flKA",
+          "mode": "list",
+          "cachedResultName": "contact",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1auy4whW2Uny2swHM26UVXvk7O4hYaRsWLRFSm10flKA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1auy4whW2Uny2swHM26UVXvk7O4hYaRsWLRFSm10flKA/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        480,
+        224
+      ],
+      "id": "08335ccb-cb31-4b28-ae8c-b6286543d278",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "HnbnOjARxVm5mXG9",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "jimmyaryan735@gmail.com",
+          "mode": "list",
+          "cachedResultName": "jimmyaryan735@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        608,
+        224
+      ],
+      "id": "ac1f8ae6-0a0e-4bcc-8211-3d0e2bbe7daf",
+      "name": "Create an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Ytt4xDmp9E832vyh",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        736,
+        224
+      ],
+      "id": "3746b512-84d2-4175-b01d-8253527e52ef",
+      "name": "Send a message in Gmail",
+      "webhookId": "9448f4ec-7862-4a93-b4ca-b2cd1212bc12",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "vItzZmZGrOdDxtBJ",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        352,
+        224
+      ],
+      "id": "f3b91d25-eda0-459e-bc3d-bfaa0a08b81b",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        768,
+        0
+      ],
+      "id": "36639dd8-fdec-4be8-9c0c-85faaf1b168d",
+      "name": "Send a text message",
+      "webhookId": "b6ceefb5-11a7-4e51-a502-57030b67221a",
+      "credentials": {
+        "telegramApi": {
+          "id": "z0AlsVuLsIRgkrWA",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "80cd70c0-84a2-43f3-83d9-cc00caaa3e2b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7a12f31e769c209ce62628d3ad19eeb1812e98197748bfc95259eedec5f7ee68"
+  },
+  "nodeGroups": [],
+  "id": "9c7gi1eoxzVUqJOM",
+  "tags": []
+}
